@@ -8,12 +8,12 @@
 	<alpha
 		android:fromAlpha="0.0"
 		android:toAlpha="1.0"
-		android:duration="2500"/>
+		android:duration="0"/>
 
 	<alpha
 		android:fromAlpha="1.0"
 		android:toAlpha="0.0"
-		android:duration="2500"
+		android:duration="4500"
 		android:startOffset="3500"/>
 
 	</set>

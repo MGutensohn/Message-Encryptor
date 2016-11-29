@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cms341.message_encryptor.MainActivity">
+    tools:context="cms341.message_encryptor.MainActivity"
+    android:background="@color/common_google_signin_btn_text_light_focused">
 
     <TextView
         android:id="@+id/title"
@@ -17,7 +18,8 @@
         android:layout_centerHorizontal="true"
         android:text="Appcryptor"
         android:fontFamily="monospace"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="#00FF00" />
 
     <EditText
         android:id="@+id/text_entry"
@@ -27,13 +29,30 @@
         android:layout_below = "@id/title"
         android:layout_marginTop="120dp"
         android:fontFamily="monospace"
+        android:textColor="#00FF00"
         android:hint="Please enter your text here"/>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:layout_below = "@id/title"
+        android:layout_marginTop="120dp"
+        android:fontFamily="monospace"
+        android:textColor="#00FF00"
+        android:textSize="12sp" />
 
     <VideoView android:id="@+id/video_view"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_height="fill_parent"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:backgroundTint="#696969"/>
 
 
     <Button
@@ -44,7 +63,20 @@
         android:layout_marginLeft="20dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="11dp"
+        android:textColor="#00FF00"
+        android:backgroundTint="#696969"
         android:onClick="decryptor"/>
+
+    <Button
+        android:id="@+id/new_message_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "New Message"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#00FF00"
+        android:backgroundTint="#696969"
+        android:onClick="reset"/>
 
     <Button
         android:id="@+id/encrypt_button"
@@ -55,6 +87,8 @@
         android:layout_alignBottom="@+id/decrypt_button"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:textColor="#00FF00"
+        android:backgroundTint="#696969"
         android:onClick="encryptor"/>
 
 </RelativeLayout>
