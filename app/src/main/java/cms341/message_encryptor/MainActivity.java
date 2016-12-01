@@ -132,16 +132,21 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected( MenuItem item) {
         switch ( item.getItemId( )) {
             case R.id.menu_key_generator:
-                loadAudioRecording(null);
+                loadKeyGenerator(null);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void loadAudioRecording( View v ) {
+    public void loadKeyGenerator( View v ) {
         startActivity( new Intent( getApplicationContext( ),
                 KeyGenerator.class));
+    }
+
+    public void loadKeyArchive( View v ) {
+        startActivity( new Intent( getApplicationContext( ),
+                KeyArchive.class));
     }
 
 

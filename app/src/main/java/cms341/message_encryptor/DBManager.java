@@ -26,9 +26,12 @@ public class DBManager extends SQLiteOpenHelper {
     private String dbkey;
 
 
-    public DBManager(Context context, String key) {
+    public DBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
+    }
+
+    public void setDBkey(String key){
         this.dbkey = key;
     }
 
