@@ -3,7 +3,10 @@
     <string name="audio_recording_manifest">Audio Recording</string>
     <string name="key_generator">Generate key</string>
     <string name="record">Record Key</string>
+    <string name="create_pass">Create Passphrase</string>
     <string name="pass_prompt">Enter Passphrase</string>
     <string name="ok">ok</string>
+    <string name="cancel">cancel</string>
     <string name="action_settings">Settings</string>
+
 </resources>

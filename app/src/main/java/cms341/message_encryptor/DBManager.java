@@ -17,26 +17,23 @@ package cms341.message_encryptor;
 public class DBManager extends SQLiteOpenHelper {
     public static final String DB_NAME = "Notes";
     public static final int DB_VERSION = 1;
-    public static final String STOREDKEYS = "keys";
+    public static final String STOREDKEYS = "keys.db";
     public static final String ID = "id";
     public static final String DATE = "date";
     public static final String CONVERSATION = "conversation";
     public static final String KEY = "key";
     private Context context;
-    private String dbkey;
 
 
     public DBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
-    }
 
-    public void setDBkey(String key){
-        this.dbkey = key;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        SQLiteDatabase.loadLibs(context);
         Log.i( "Noted", "onCreate called");
         String sqlCreate = "create table " + STOREDKEYS + " ( "
                 +  ID + " integer primary key autoincrement, "
@@ -45,7 +42,7 @@ public class DBManager extends SQLiteOpenHelper {
                 + KEY + " text "
                 + ")";
         try {
-            db.execSQL( sqlCreate);
+            db.execSQL(sqlCreate);
         }
         catch ( SQLException se ) {
             Toast.makeText( context, se.getMessage(), Toast.LENGTH_LONG).show( );
@@ -53,10 +50,10 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
-    public long insert( String date, String convo, String key ) {
+    public long insert(String pass, String date, String convo, String key ) {
         long newId = -1;
         try {
-            SQLiteDatabase db = this.getWritableDatabase(dbkey);
+            SQLiteDatabase db = this.getWritableDatabase(pass);
 
             ContentValues vals = new ContentValues();
             vals.put( DATE, date);
@@ -73,11 +70,14 @@ public class DBManager extends SQLiteOpenHelper {
         return newId;
     }
 
-    public ArrayList<String> selectAll( ) {
+    public ArrayList<String> selectAll(String pass) {
 
         ArrayList<String> noteList = new ArrayList<String>( );
         try {
-            SQLiteDatabase db = this.getReadableDatabase(dbkey);
+            SQLiteDatabase db = this.getReadableDatabase(pass);
+            if(db == null){
+                return null;
+            }
 
             String query = "Select * from " + STOREDKEYS;
             Cursor cursor = db.rawQuery( query, null);
@@ -100,11 +100,11 @@ public class DBManager extends SQLiteOpenHelper {
         return noteList;
     }
 
-    public ArrayList<String> selectByColumn( String colName, String colValue ) {
+    public ArrayList<String> selectByColumn(String pass, String colName, String colValue ) {
 
         ArrayList<String> noteList = new ArrayList<String>( );
         try {
-            SQLiteDatabase db = this.getReadableDatabase(dbkey);
+            SQLiteDatabase db = this.getReadableDatabase(pass);
 
             Cursor cursor = db.query( STOREDKEYS, null, colName + " LIKE ?",
                     new String[] {"%" + colValue + "%"}, null, null, colName );
@@ -127,11 +127,11 @@ public class DBManager extends SQLiteOpenHelper {
         return noteList;
     }
 
-    public ArrayAdapter<String> fillAutoCompleteTextFields(Context context, String column) {
+    public ArrayAdapter<String> fillAutoCompleteTextFields(String pass, Context context, String column) {
         ArrayAdapter<String> adapter = null;
 
         try {
-            SQLiteDatabase db = this.getReadableDatabase(dbkey);
+            SQLiteDatabase db = this.getReadableDatabase(pass);
 
             // select distinct values in column
             Cursor cursor = db.query(true, STOREDKEYS, new String[]{column},
