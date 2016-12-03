@@ -2,12 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="cms341.message_encryptor.MainActivity"
     android:background="@color/common_google_signin_btn_text_light_focused">
 
@@ -32,7 +28,7 @@
         android:textColor="#00FF00"
         android:hint="Please enter your text here"/>
 
-    <TextView
+    <EditText
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,12 +42,11 @@
 
     <VideoView android:id="@+id/video_view"
         android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:layout_height="fill_parent"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         android:backgroundTint="#696969"/>
 
 
@@ -71,7 +66,7 @@
         android:id="@+id/new_message_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "New Message"
+        android:text = "Destroy message"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:textColor="#00FF00"

@@ -27,7 +27,7 @@ import javax.crypto.NoSuchPaddingException;
 public class MainActivity extends AppCompatActivity {
     Cryptor cryptor;
     EditText message;
-    TextView response;
+    EditText response;
     Button reset;
 
     private VideoView vView;
@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
 
         vView = (VideoView)findViewById(R.id.video_view);
         reset = (Button)findViewById(R.id.new_message_button);
+        response = (EditText)findViewById(R.id.text);
+        vView.setMediaController(null);
 
+        response.setVisibility(View.INVISIBLE);
         vView.setVisibility(View.INVISIBLE);
         reset.setVisibility(View.INVISIBLE);
         Intent intent = getIntent();
@@ -74,16 +77,18 @@ public class MainActivity extends AppCompatActivity {
         vView = (VideoView)findViewById(R.id.video_view);
         encrypt = (Button)findViewById(R.id.encrypt_button);
         decrypt = (Button)findViewById(R.id.decrypt_button);
-        response = (TextView)findViewById(R.id.text);
+        response = (EditText)findViewById(R.id.text);
         reset = (Button)findViewById(R.id.new_message_button);
+
+        vView.setMediaController(null);
 
 
         encrypt.setVisibility(View.INVISIBLE);
         decrypt.setVisibility(View.INVISIBLE);
         message.setVisibility(View.INVISIBLE);
 
+
         response.setVisibility(View.VISIBLE);
-        reset.setVisibility(View.VISIBLE);
         vView.setVisibility(View.VISIBLE);
 
         vView.start();                              // starts showing the encoding animation
@@ -91,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
         String encryptedText = cryptor.encryptText(message.getText().toString(), key);
         response.setText(encryptedText);
+
+        reset.setVisibility(View.VISIBLE);
     }
 
     public void decryptor(View v) throws BadPaddingException, InvalidKeyException, IllegalBlockSizeException {
@@ -98,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
         vView = (VideoView)findViewById(R.id.video_view);
         encrypt = (Button)findViewById(R.id.encrypt_button);
         decrypt = (Button)findViewById(R.id.decrypt_button);
-        response = (TextView)findViewById(R.id.text);
+        response = (EditText) findViewById(R.id.text);
         reset = (Button)findViewById(R.id.new_message_button);
 
-
+        vView.setMediaController(null);
 
         encrypt.setVisibility(View.INVISIBLE);
         decrypt.setVisibility(View.INVISIBLE);
@@ -178,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         vView = (VideoView)findViewById(R.id.video_view);
         encrypt = (Button)findViewById(R.id.encrypt_button);
         decrypt = (Button)findViewById(R.id.decrypt_button);
-        response = (TextView)findViewById(R.id.text);
+        response = (EditText)findViewById(R.id.text);
         reset = (Button)findViewById(R.id.new_message_button);
 
 
