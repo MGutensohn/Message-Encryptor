@@ -11,13 +11,14 @@ package cms341.message_encryptor;
         import android.widget.ArrayAdapter;
         import android.widget.Toast;
 
+        import java.io.File;
         import java.util.ArrayList;
 
 
 public class DBManager extends SQLiteOpenHelper {
     public static final String DB_NAME = "Notes";
     public static final int DB_VERSION = 1;
-    public static final String STOREDKEYS = "keys.db";
+    public static final String STOREDKEYS = "keys";
     public static final String ID = "id";
     public static final String DATE = "date";
     public static final String CONVERSATION = "conversation";
@@ -33,13 +34,12 @@ public class DBManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        SQLiteDatabase.loadLibs(context);
         Log.i( "Noted", "onCreate called");
-        String sqlCreate = "create table " + STOREDKEYS + " ( "
-                +  ID + " integer primary key autoincrement, "
-                +  DATE + " text, "
-                + CONVERSATION + " text, "
-                + KEY + " text "
+        String sqlCreate = "CREATE TABLE " + STOREDKEYS + " ( "
+                +  ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                +  DATE + " TEXT, "
+                + CONVERSATION + " TEXT, "
+                + KEY + " TEXT "
                 + ")";
         try {
             db.execSQL(sqlCreate);
@@ -92,6 +92,7 @@ public class DBManager extends SQLiteOpenHelper {
                 }
                 cursor.moveToNext();
             }
+            cursor.close();
         }
         catch ( SQLException se ) {
             Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
@@ -119,6 +120,7 @@ public class DBManager extends SQLiteOpenHelper {
                 }
                 cursor.moveToNext();
             }
+            cursor.close();
         }
         catch ( SQLException se ) {
             Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
@@ -147,6 +149,7 @@ public class DBManager extends SQLiteOpenHelper {
                     autoTextOptions[i] = cursor.getString(cursor.getColumnIndex(column));
                     cursor.moveToNext();
                 }
+                cursor.close();
 
                 adapter = new ArrayAdapter<String>(context,
                         android.R.layout.simple_dropdown_item_1line,

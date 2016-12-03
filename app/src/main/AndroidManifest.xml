@@ -27,8 +27,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".KeyArchive"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".KeyArchive">
             <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 

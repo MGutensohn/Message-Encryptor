@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.Button;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private VideoView vView;
     private MediaController vMediaController;
     private Button encrypt, decrypt;
+    private String key;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         vView.setVisibility(View.INVISIBLE);
         reset.setVisibility(View.INVISIBLE);
+        Intent intent = getIntent();
+        key = intent.getStringExtra("key");
 
         configureVideo( ); //configuration of the animation
 
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         vView.start();                              // starts showing the encoding animation
         startAnimation(v);
 
-        String encryptedText = cryptor.encryptText(message.getText().toString(), "thisIsAnEncryptionKeyForThisApp1");
+        String encryptedText = cryptor.encryptText(message.getText().toString(), key);
         response.setText(encryptedText);
     }
 
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         vView.start();                              // starts showing the encoding animation
         startAnimation(v);
 
-        String decryptedText = cryptor.decryptText(message.getText().toString(), "thisIsAnEncryptionKeyForThisApp1");
+        String decryptedText = cryptor.decryptText(message.getText().toString(), key);
         response.setText(decryptedText);
     }
 

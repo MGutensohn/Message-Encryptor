@@ -21,6 +21,8 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,16 +40,19 @@ public class KeyArchive extends AppCompatActivity {
     EditText passwordet;
     Bundle bundle;
     HashMap<String, String> keys;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_archive);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        SQLiteDatabase.loadLibs(this);
+        results = (LinearLayout)findViewById(R.id.keys);
         dbm = new DBManager(this);
-        dbFile = this.getDatabasePath("keys.db");
         bundle = new Bundle();
+        enterPass();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -62,8 +67,11 @@ public class KeyArchive extends AppCompatActivity {
 
 
     public void enterPass(){
+        intent = new Intent(this, MainActivity.class);
         LayoutInflater li = LayoutInflater.from(this);
-        ArrayList<String> convos = dbm.selectAll(passwordet.getText().toString());
+        dbm.insert("testkey", "12/3/2016","TestKey","qwertyuiopasdfghjklzxcvbnm123456");
+        ArrayList<String> convos = dbm.selectAll("testkey");
+        keys = new HashMap<>();
 
         int id = 0;
         int index = 0;
@@ -79,7 +87,7 @@ public class KeyArchive extends AppCompatActivity {
                 date.setTextSize(15);
                 index++;
 
-                TextView sub = createTV(this,"Create: " + convos.get(index));
+                TextView sub = createTV(this, convos.get(index));
                 sub.setTypeface(null, Typeface.BOLD);
                 sub.setTextSize(25);
                 sub.setTag("convo" + id);
@@ -92,7 +100,9 @@ public class KeyArchive extends AppCompatActivity {
                 sub.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        bundle.putString("key", keys.get(v.getTag()));
+                        //bundle.putString("key", keys.get(v.getTag()));
+                        intent.putExtra("key", keys.get(v.getTag()));
+                        startActivity(intent);
                     }
                 });
                 results.addView(sub);
