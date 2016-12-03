@@ -16,7 +16,7 @@ package cms341.message_encryptor;
 
 
 public class DBManager extends SQLiteOpenHelper {
-    public static final String DB_NAME = "Notes";
+    public static final String DB_NAME = "StoredKeys";
     public static final int DB_VERSION = 1;
     public static final String STOREDKEYS = "keys";
     public static final String ID = "id";
@@ -93,11 +93,11 @@ public class DBManager extends SQLiteOpenHelper {
                 cursor.moveToNext();
             }
             cursor.close();
+            db.close();
         }
         catch ( SQLException se ) {
             Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
         }
-
         return noteList;
     }
 
