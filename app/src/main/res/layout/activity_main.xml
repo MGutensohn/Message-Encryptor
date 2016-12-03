@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context="cms341.message_encryptor.MainActivity"
+    android:background="@color/common_google_signin_btn_text_light_focused">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Appcryptor"
+        android:fontFamily="monospace"
+        android:textSize="24sp"
+        android:textColor="#00FF00" />
+
+    <EditText
+        android:id="@+id/text_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below = "@id/title"
+        android:layout_marginTop="120dp"
+        android:fontFamily="monospace"
+        android:textColor="#00FF00"
+        android:hint="Please enter your text here"/>
+
+    <EditText
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:layout_below = "@id/title"
+        android:layout_marginTop="120dp"
+        android:fontFamily="monospace"
+        android:textColor="#00FF00"
+        android:textSize="12sp" />
+
+    <VideoView android:id="@+id/video_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="#696969"/>
+
+
+    <Button
+        android:id="@+id/decrypt_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Decrypt"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="11dp"
+        android:textColor="#00FF00"
+        android:backgroundTint="#696969"
+        android:onClick="decryptor"/>
+
+    <Button
+        android:id="@+id/new_message_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Destroy message"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#00FF00"
+        android:backgroundTint="#696969"
+        android:onClick="reset"/>
+
+    <Button
+        android:id="@+id/encrypt_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "Encrypt"
+        android:layout_marginRight="20dp"
+        android:layout_alignBottom="@+id/decrypt_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="#00FF00"
+        android:backgroundTint="#696969"
+        android:onClick="encryptor"/>
+
+</RelativeLayout>
