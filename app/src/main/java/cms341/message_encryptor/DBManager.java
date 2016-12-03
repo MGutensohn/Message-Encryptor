@@ -20,7 +20,6 @@ public class DBManager extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
     public static final String STOREDKEYS = "keys";
     public static final String ID = "id";
-    public static final String DATE = "date";
     public static final String CONVERSATION = "conversation";
     public static final String KEY = "key";
     private Context context;
@@ -37,7 +36,6 @@ public class DBManager extends SQLiteOpenHelper {
         Log.i( "Noted", "onCreate called");
         String sqlCreate = "CREATE TABLE " + STOREDKEYS + " ( "
                 +  ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                +  DATE + " TEXT, "
                 + CONVERSATION + " TEXT, "
                 + KEY + " TEXT "
                 + ")";
@@ -50,13 +48,12 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
-    public long insert(String pass, String date, String convo, String key ) {
+    public long insert(String pass, String convo, String key ) {
         long newId = -1;
         try {
             SQLiteDatabase db = this.getWritableDatabase(pass);
 
             ContentValues vals = new ContentValues();
-            vals.put( DATE, date);
             vals.put(CONVERSATION, convo );
             vals.put( KEY, key);
 
@@ -68,6 +65,12 @@ public class DBManager extends SQLiteOpenHelper {
             Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
         }
         return newId;
+    }
+
+    public long delete(String pass, String convo){
+        SQLiteDatabase db = this.getReadableDatabase(pass);
+
+        return db.delete(STOREDKEYS, CONVERSATION + "='" + convo + "'",null);
     }
 
     public ArrayList<String> selectAll(String pass) {

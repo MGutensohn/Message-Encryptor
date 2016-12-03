@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -17,11 +18,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,28 +38,59 @@ import static java.sql.Types.NULL;
 
 public class KeyArchive extends AppCompatActivity {
     private DBManager dbm;
-    LinearLayout results;
+    ListView results;
+    ArrayAdapter resultsAdapter;
     private ActionMode mActionMode;
     File dbFile;
     Dialog PasswordDialog;
     TextView passwordPrompt;
     EditText passwordet;
     Bundle bundle;
-    HashMap<String, String> keys;
+    HashMap<Integer, String> keys;
     Intent intent;
+    int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_archive);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
         SQLiteDatabase.loadLibs(this);
-        results = (LinearLayout)findViewById(R.id.keys);
-        dbm = new DBManager(this);
-        bundle = new Bundle();
 
+        ArrayList<String> test = new ArrayList<>();
+        results = (ListView)findViewById(R.id.keys);
+        resultsAdapter = new ArrayAdapter<String>(this, R.layout.convo_item, test);
+        dbm = new DBManager(this);
+        dbm.insert("testkey", "TestKey 0","qwertyuiopasdfghjklzxcvbnm123456");
+        dbm.insert("testkey", "TestKey 1","qwertyuiopasdfghjklzxcvbnm123456");
+        dbm.insert("testkey", "TestKey 2","qwertyuiopasdfghjklzxcvbnm123456");
         getStoredKeys();
+        results.setAdapter(resultsAdapter);
+
+
+        results.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                intent.putExtra("key", keys.get(position));
+                startActivity(intent);
+            }
+        });
+
+        results.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (mActionMode != null) {
+                    return false;
+                }
+
+                // Start the CAB using the ActionMode.Callback defined above
+                mActionMode = KeyArchive.this.startActionMode(mActionModeCallback);
+                view.setSelected(true);
+                position = i;
+                return true;
+            }
+        });
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,75 +105,33 @@ public class KeyArchive extends AppCompatActivity {
 
 
     public void getStoredKeys(){
-        intent = new Intent(this, MainActivity.class);
-        dbm.insert("testkey", "12/3/2016","TestKey","qwertyuiopasdfghjklzxcvbnm123456");
-        ArrayList<String> convos = dbm.selectAll("testkey");
-        keys = new HashMap<>();
-
         int id = 0;
+        intent = new Intent(this, MainActivity.class);
+
+        ArrayList<String> convos = dbm.selectAll("testkey");
+        keys = new HashMap<Integer, String>();
+
+
         int index = 0;
+        if(!resultsAdapter.isEmpty()) resultsAdapter.clear();
 
         while(index < convos.size()){
             index++;
-            TextView date = createTV(this, convos.get(index));
-            date.setTypeface(null, Typeface.ITALIC);
-            date.setTextSize(15);
+            resultsAdapter.add(convos.get(index));
+            Log.i("added item:", convos.get(index));
             index++;
-            TextView sub = createTV(this, convos.get(index));
-            sub.setTypeface(null, Typeface.BOLD);
-            sub.setTextSize(25);
-            sub.setTag("convo" + id);
-            index++;
-             keys.put("convo" + id, convos.get(index));
+             keys.put(id, convos.get(index));
             index++;
             id++;
 
-            sub.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        intent.putExtra("key", keys.get(v.getTag()));
-                        startActivity(intent);
-                    }
-                });
-            sub.setOnLongClickListener(new View.OnLongClickListener() {
-                // Called when the user long-clicks on someView
-                public boolean onLongClick(View view) {
-                    if (mActionMode != null) {
-                        return false;
-                    }
-
-                    // Start the CAB using the ActionMode.Callback defined above
-                    mActionMode = KeyArchive.this.startActionMode(mActionModeCallback);
-                    view.setSelected(true);
-                    return true;
-                }
-            });
-            results.addView(sub);
-            results.addView(date);
-            results.addView(createLine());
         }
     }
 
-
-    public TextView createTV(Context context, String text){
-        TextView tv = new TextView(context);
-        tv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT));
-        tv.setText(text);
-        tv.setTextColor(Color.parseColor("#00FF00"));
-
-        return tv;
+    public void deleteStoredKey(){
+        dbm.delete("testkey",results.getItemAtPosition(position).toString());
+        getStoredKeys();
     }
 
-    public View createLine(){
-        View line = new View(this);
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 3);
-        params.setMargins(0, 5, 0, 10);
-        line.setLayoutParams(params);
-        line.setBackgroundColor(Color.parseColor("#00FF00"));
-
-        return line;
-    }
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
@@ -165,6 +157,10 @@ public class KeyArchive extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.menu_share:
                     //shareCurrentItem();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                case R.id.menu_delete:
+                    deleteStoredKey();
                     mode.finish(); // Action picked, so close the CAB
                     return true;
                 default:
