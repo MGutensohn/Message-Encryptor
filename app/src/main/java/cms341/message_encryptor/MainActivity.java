@@ -1,6 +1,7 @@
 package cms341.message_encryptor;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static android.R.attr.id;
+
 public class MainActivity extends AppCompatActivity {
     Cryptor cryptor;
     EditText message;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private MediaController vMediaController;
     private Button encrypt, decrypt;
     private String key;
+
+    private Bitmap bitmap;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -142,9 +147,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected( MenuItem item) {
         switch ( item.getItemId( )) {
+
             case R.id.menu_key_generator:
                 loadKeyGenerator(null);
                 return true;
+
+            case R.id.action_email:
+                emailMessage( );
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -238,5 +249,16 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+    public void emailMessage( ) {
+
+        response = (EditText)findViewById(R.id.text);
+
+        Intent emailIntent = new Intent( Intent.ACTION_SEND);
+        emailIntent.setType( "text/plain");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "encrypted text");
+        emailIntent.putExtra(Intent.EXTRA_STREAM, response.getText() );
+
+        startActivity( Intent.createChooser( emailIntent, getString( R.string.message_sent)));
     }
 }
