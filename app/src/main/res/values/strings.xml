@@ -13,6 +13,9 @@
     <string name="noMessage">Nothing to send</string>
     <string name="message_sent">Your encrypted message is sent</string>
     <string name="action_email">Email</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop Recording</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
