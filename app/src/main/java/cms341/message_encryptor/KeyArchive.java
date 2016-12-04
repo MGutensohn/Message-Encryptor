@@ -107,40 +107,31 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
         });
     }
 
-    private class login implements Runnable{
-
-        @Override
-        public void run() {
-
-        }
-    }
-
-
 
     public void getStoredKeys(){
-        dbm.insert(password, "TestKey 0","qwertyuiopasdfghjklzxcvbnm123456");
-        dbm.insert(password, "TestKey 1","qwertyuiopasdfghjklzxcvbnm123456");
-        dbm.insert(password, "TestKey 2","qwertyuiopasdfghjklzxcvbnm123456");
-        int id = 0;
-        intent = new Intent(this, MainActivity.class);
+//            dbm.insert(password, "TestKey 0", "qwertyuiopasdfghjklzxcvbnm123456");
+//            dbm.insert(password, "TestKey 1", "qwertyuiopasdfghjklzxcvbnm123456");
+//            dbm.insert(password, "TestKey 2", "qwertyuiopasdfghjklzxcvbnm123456");
+            int id = 0;
+            intent = new Intent(this, MainActivity.class);
 
-        ArrayList<String> convos = dbm.selectAll(password);
-        keys = new HashMap<Integer, String>();
+            ArrayList<String> convos = dbm.selectAll(password);
+            keys = new HashMap<Integer, String>();
 
 
-        int index = 0;
-        if(!resultsAdapter.isEmpty()) resultsAdapter.clear();
+            int index = 0;
+            if (!resultsAdapter.isEmpty()) resultsAdapter.clear();
 
-        while(index < convos.size()){
-            index++;
-            resultsAdapter.add(convos.get(index));
-            Log.i("added item:", convos.get(index));
-            index++;
-             keys.put(id, convos.get(index));
-            index++;
-            id++;
+            while (index < convos.size()) {
+                index++;
+                resultsAdapter.add(convos.get(index));
+                Log.i("added item:", convos.get(index));
+                index++;
+                keys.put(id, convos.get(index));
+                index++;
+                id++;
 
-        }
+            }
     }
 
     public void deleteStoredKey(){

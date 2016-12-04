@@ -48,11 +48,11 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
+
     public long insert(String pass, String convo, String key ) {
         long newId = -1;
         try {
             SQLiteDatabase db = this.getWritableDatabase(pass);
-
             ContentValues vals = new ContentValues();
             vals.put(CONVERSATION, convo );
             vals.put( KEY, key);
