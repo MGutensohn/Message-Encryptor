@@ -27,7 +27,7 @@ public class LoginFragment extends DialogFragment {
 
     public void onAttach(Context context) {
         super.onAttach(context);
-        Activity a;
+         Activity a;
 
         if (context instanceof Activity){
             a=(Activity) context;
@@ -35,8 +35,6 @@ public class LoginFragment extends DialogFragment {
         }else{
             getPass = (getPasswordListener) context;
         }
-
-
     }
 
 
@@ -46,17 +44,20 @@ public class LoginFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
         getPass = (getPasswordListener) getActivity();
+        View view = inflater.inflate(R.layout.fragment_login, null);
+        pass = (EditText)view.findViewById(R.id.password);
 
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.fragment_login, null))
+        builder.setView(view)
 
                 // Add action buttons
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        pass = (EditText)getView().findViewById(R.id.password);
+
                         getPass.getPassword(pass.getText().toString());
+                        ((KeyArchive) getActivity()).getStoredKeys();
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

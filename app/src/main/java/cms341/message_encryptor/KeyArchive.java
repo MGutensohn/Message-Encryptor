@@ -43,23 +43,32 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
     ListView results;
     ArrayAdapter resultsAdapter;
     private ActionMode mActionMode;
-    private String password;
+    private String password = null;
     HashMap<Integer, String> keys;
     Intent intent;
     int position;
     DialogFragment login;
 
     @Override
+    public void getPassword(String s) {
+        this.password = s;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_archive);
         SQLiteDatabase.loadLibs(this);
+        login = new LoginFragment();
+        login.show(getFragmentManager(),"login");
+
+
 
         ArrayList<String> test = new ArrayList<>();
         results = (ListView)findViewById(R.id.keys);
         resultsAdapter = new ArrayAdapter<String>(this, R.layout.convo_item, test);
         dbm = new DBManager(this);
-        //login();
+
         results.setAdapter(resultsAdapter);
 
 
@@ -77,7 +86,7 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
                 if (mActionMode != null) {
                     return false;
                 }
-                new login().execute();
+
                 // Start the CAB using the ActionMode.Callback defined above
                 mActionMode = KeyArchive.this.startActionMode(mActionModeCallback);
                 view.setSelected(true);
@@ -98,40 +107,20 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
         });
     }
 
-    private class login extends AsyncTask{
+    private class login implements Runnable{
 
         @Override
-        protected Object doInBackground(Object[] objects) {
-            return null;
+        public void run() {
+
         }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            login = new LoginFragment();
-            login.show(getFragmentManager(),"login");
-        }
-
-
-
-        protected void onProgressUpdate(Integer... progress) {
-        }
-
-        protected void onPostExecute() {
-            dbm.insert(password, "TestKey 0","qwertyuiopasdfghjklzxcvbnm123456");
-            dbm.insert(password, "TestKey 1","qwertyuiopasdfghjklzxcvbnm123456");
-            dbm.insert(password, "TestKey 2","qwertyuiopasdfghjklzxcvbnm123456");
-            getStoredKeys();
-        }
-
     }
 
-    @Override
-    public void getPassword(String s) {
-        this.password = s;
-    }
+
 
     public void getStoredKeys(){
+        dbm.insert(password, "TestKey 0","qwertyuiopasdfghjklzxcvbnm123456");
+        dbm.insert(password, "TestKey 1","qwertyuiopasdfghjklzxcvbnm123456");
+        dbm.insert(password, "TestKey 2","qwertyuiopasdfghjklzxcvbnm123456");
         int id = 0;
         intent = new Intent(this, MainActivity.class);
 
