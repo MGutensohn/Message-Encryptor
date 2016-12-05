@@ -38,6 +38,13 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
     }
 
     @Override
+    public void onRestart(){
+        super.onRestart();
+        getStoredKeys();
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_key_archive);
@@ -121,6 +128,7 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
     }
 
     public void shareKey(){
+        toNFC.putExtra("password",password);
         toNFC.putExtra("conversation", results.getItemAtPosition(position).toString());
         toNFC.putExtra("key",keys.get(position));
         startActivity(toNFC);
@@ -172,6 +180,7 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
         }
+
     };
 
 

@@ -5,6 +5,7 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ public class NFCManager extends AppCompatActivity implements NfcAdapter.OnNdefPu
         NfcAdapter.CreateNdefMessageCallback {
     private NfcAdapter mNfcAdapter;
     private ArrayList<String> message = new ArrayList<>();
+    private ArrayList<String> newConvers = new ArrayList<>();
 
 
 
@@ -61,7 +63,7 @@ public class NFCManager extends AppCompatActivity implements NfcAdapter.OnNdefPu
 
     public NdefRecord[] createRecords() {
 
-        NdefRecord[] records = new NdefRecord[message.size()];
+        NdefRecord[] records = new NdefRecord[message.size() + 1];
 
         for (int i = 0; i < message.size(); i++){
 
@@ -74,6 +76,36 @@ public class NFCManager extends AppCompatActivity implements NfcAdapter.OnNdefPu
                     payload);                   //Our payload for the Record
             records[i] = record;
         }
+        records[message.size()] =
+                NdefRecord.createApplicationRecord(getPackageName());
         return records;
     }
+
+    private void handleNfcIntent(Intent NfcIntent) {
+        DBManager dbm = new DBManager(this);
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(NfcIntent.getAction())) {
+            Parcelable[] receivedArray =
+                    NfcIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+
+            if(receivedArray != null) {
+                newConvers.clear();
+                NdefMessage receivedMessage = (NdefMessage) receivedArray[0];
+                NdefRecord[] attachedRecords = receivedMessage.getRecords();
+
+                for (NdefRecord record:attachedRecords) {
+                    String string = new String(record.getPayload());
+                    //Make sure we don't pass along our AAR (Android Application Record)
+                    if (string.equals(getPackageName())) { continue; }
+                    newConvers.add(string);
+                }
+                Toast.makeText(this, "Received " + newConvers.size() +
+                        " new key.", Toast.LENGTH_LONG).show();
+
+            }
+            else {
+                Toast.makeText(this, "Received Blank Parcel", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }
