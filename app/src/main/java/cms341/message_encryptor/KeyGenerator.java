@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -149,17 +150,25 @@ public class KeyGenerator extends AppCompatActivity {
         public void createKey(String audioSavePathInDevice) {
             File file = new File(audioSavePathInDevice);
             int size = (int) file.length();
-            byte[] bytes = new byte[size];
+            byte[] bytes = new byte[7];
             try {
                 BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
                 buf.read(bytes, 0, bytes.length);
                 buf.close();
-                System.out.println("\n\n file content: " + Base64.encodeToString(bytes, Base64.DEFAULT));
+                String splitText = Base64.encodeToString(bytes, Base64.DEFAULT);
+                Scanner scan = new Scanner(splitText);
+                Pattern pattern = Pattern.compile(".");
+                String key = "";
+                while (key.length() < 32) {
+                    key += scan.next(pattern);
+                }
+                System.err.println("\n\n KEY: " + key);
+
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
+                System.err.println("File could not be found. " + e);
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
+                System.err.println("Input output exception. " + e);
                 e.printStackTrace();
             }
 
