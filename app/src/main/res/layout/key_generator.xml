@@ -9,6 +9,14 @@
     tools:context="cms341.message_encryptor.KeyGenerator"
     android:background="@color/common_google_signin_btn_text_light_focused">
 
+    <EditText
+        android:id="@+id/key_generator"
+        android:text="@string/enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,6 +26,7 @@
         android:layout_marginTop="37dp"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="11dp"
+        android:layout_centerVertical="true"
         android:backgroundTint="#696969"
         android:textColor="#00FF00" />
 

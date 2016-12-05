@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.view.View;
 
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -152,7 +153,7 @@ public class KeyGenerator extends AppCompatActivity {
         public void createKey(String audioSavePathInDevice) {
             File file = new File(audioSavePathInDevice);
             int size = (int) file.length();
-            byte[] bytes = new byte[7];
+            byte[] bytes = new byte[size];
             try {
                 BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
                 Intent intent = getIntent();
@@ -160,14 +161,17 @@ public class KeyGenerator extends AppCompatActivity {
 
                 buf.read(bytes, 0, bytes.length);
                 buf.close();
-                String splitText = Base64.encodeToString(bytes, Base64.DEFAULT);
+                String keyText = Base64.encodeToString(bytes, Base64.DEFAULT);
+                String halfText = keyText.substring(keyText.length()/2, keyText.length()-1);
                 String key = "";
                 Random rand = new Random();
                 while (key.length() < 32) {
-                    key += splitText.charAt(rand.nextInt(splitText.length() - 1));
-
+                    key += halfText.charAt(rand.nextInt(halfText.length() - 1));
                 }
-                dbm.insert(intent.getStringExtra("password"),"PUT THE CONTENT OF THE EDIT TEXT HERE",key);
+
+                EditText title = (EditText) findViewById(R.id.key_generator);
+
+                dbm.insert(intent.getStringExtra("password"), title.getText().toString(), key);
                 System.err.println("\n\n KEY: " + key);
 
             } catch (FileNotFoundException e) {
