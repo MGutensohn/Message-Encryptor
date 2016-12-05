@@ -10,7 +10,7 @@
         app:showAsAction="never" />
 
     <item android:id="@+id/action_email"
-        android:icon="@android:drawable/ic_dialog_email"
+        android:icon="@drawable/ic_share"
         android:title="@string/action_email"
         android:orderInCategory="200"
         app:showAsAction="always"/>
