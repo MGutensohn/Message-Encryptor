@@ -156,11 +156,11 @@ public class KeyGenerator extends AppCompatActivity {
                 buf.read(bytes, 0, bytes.length);
                 buf.close();
                 String splitText = Base64.encodeToString(bytes, Base64.DEFAULT);
-                Scanner scan = new Scanner(splitText);
-                Pattern pattern = Pattern.compile(".");
                 String key = "";
+                Random rand = new Random();
                 while (key.length() < 32) {
-                    key += scan.next(pattern);
+                    key += splitText.charAt(rand.nextInt(splitText.length() - 1));
+
                 }
                 System.err.println("\n\n KEY: " + key);
 

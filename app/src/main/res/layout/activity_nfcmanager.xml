@@ -10,4 +10,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cms341.message_encryptor.NFCManager">
 
+    <TextView
+        android:id="@+id/conversation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="35sp"
+        android:textAlignment="center"/>
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/conversation"
+        android:text="@string/send"
+        android:layout_centerInParent="true"/>
+
+
 </RelativeLayout>
