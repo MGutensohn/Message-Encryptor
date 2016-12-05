@@ -84,8 +84,10 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity( new Intent( getApplicationContext( ),
-                        KeyGenerator.class));
+                Intent intent = new Intent( getApplicationContext( ),
+                        KeyGenerator.class);
+                intent.putExtra("password",password);
+                startActivity(intent);
             }
         });
     }

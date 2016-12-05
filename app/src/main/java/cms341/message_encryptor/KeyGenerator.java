@@ -1,5 +1,6 @@
 package cms341.message_encryptor;
 
+import android.content.Intent;
 import android.media.MediaRecorder;
 
 import android.os.Environment;
@@ -47,6 +48,7 @@ public class KeyGenerator extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.key_generator);
+
 
             recordButton = (Button) findViewById(R.id.record);
             permissionsCheck = checkPermission();
@@ -153,6 +155,9 @@ public class KeyGenerator extends AppCompatActivity {
             byte[] bytes = new byte[7];
             try {
                 BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+                Intent intent = getIntent();
+                DBManager dbm = new DBManager(this);
+
                 buf.read(bytes, 0, bytes.length);
                 buf.close();
                 String splitText = Base64.encodeToString(bytes, Base64.DEFAULT);
@@ -162,6 +167,7 @@ public class KeyGenerator extends AppCompatActivity {
                     key += splitText.charAt(rand.nextInt(splitText.length() - 1));
 
                 }
+                dbm.insert(intent.getStringExtra("password"),"PUT THE CONTENT OF THE EDIT TEXT HERE",key);
                 System.err.println("\n\n KEY: " + key);
 
             } catch (FileNotFoundException e) {
