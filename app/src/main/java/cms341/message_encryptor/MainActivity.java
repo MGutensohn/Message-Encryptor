@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         else {
-            Toast.makeText(this, "nothing to send", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Nothing to send", Toast.LENGTH_LONG).show();
         }
     }
 }
