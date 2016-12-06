@@ -116,11 +116,17 @@ public class MainActivity extends AppCompatActivity {
         reset.setVisibility(View.VISIBLE);
         vView.setVisibility(View.VISIBLE);
 
-        vView.start();                              // starts showing the encoding animation
-        startAnimation(v);
 
-        String decryptedText = cryptor.decryptText(message.getText().toString(), key);
-        response.setText(decryptedText);
+        try {
+            String decryptedText = cryptor.decryptText(message.getText().toString(), key);
+            vView.start();                              // starts showing the encoding animation
+            startAnimation(v);
+            response.setText(decryptedText);
+        }
+        catch (Exception e){
+            Toast.makeText(this, R.string.no_encrypted, Toast.LENGTH_LONG).show();
+            reset(v);
+        }
     }
 
     /**
@@ -245,13 +251,20 @@ public class MainActivity extends AppCompatActivity {
     }
     public void emailMessage( ) {
 
-        response = (EditText)findViewById(R.id.text);
 
-        Intent emailIntent = new Intent( Intent.ACTION_SEND);
-        emailIntent.setType( "text/plain");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "encrypted text");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, response.getText() );
+        if (response.getText() != null) {
+            response = (EditText) findViewById(R.id.text);
 
-        startActivity( Intent.createChooser( emailIntent, getString( R.string.message_sent)));
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "encrypted text");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, response.getText());
+
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.message_sent)));
+        }
+
+        else {
+            Toast.makeText(this, "nothing to send", Toast.LENGTH_LONG).show();
+        }
     }
 }

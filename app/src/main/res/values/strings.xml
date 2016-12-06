@@ -18,6 +18,7 @@
     <string name="send">send</string>
     <string name="enter">Enter Title Here</string>
     <string name="add_key">add new key</string>
+    <string name="no_encrypted">Please enter an encrypted text</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
