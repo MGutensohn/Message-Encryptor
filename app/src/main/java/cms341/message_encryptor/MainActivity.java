@@ -1,8 +1,11 @@
 package cms341.message_encryptor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private MediaController vMediaController;
     private Button encrypt, decrypt;
     private String key;
+    private SharedPreferences prefs;
+    private boolean changeColor;
+    private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
 
     @Override
@@ -67,7 +73,24 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        prefs = PreferenceManager.getDefaultSharedPreferences( this);
+        changeColor = prefs.getBoolean("color", false );
 
+        settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged( SharedPreferences prefs, String key ) {
+                changeColor = prefs.getBoolean("color", true );
+                changeColor();
+            }
+        };
+
+        prefs.registerOnSharedPreferenceChangeListener( settingsListener);
+    }
+
+    private void changeColor() {
+        if (changeColor) {
+            TextView color = (TextView) findViewById(R.id.title);
+            color.setTextColor(ColorStateList.valueOf(4));
+        }
     }
 
     public void encryptor(View v) throws BadPaddingException, InvalidKeyException, IllegalBlockSizeException {
