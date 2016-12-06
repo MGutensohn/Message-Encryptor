@@ -17,8 +17,15 @@
     <string name="recording">Now recording</string>
     <string name="send">send</string>
     <string name="enter">Enter Title Here</string>
+<<<<<<< Updated upstream
     <string name="add_key">add new key</string>
     <string name="no_encrypted">Please enter an encrypted text</string>
+=======
+    <string name="recording_started">Recording Started</string>
+    <string name="permission_granted">Permission Granted</string>
+    <string name="permission_denied">Permission Denied</string>
+
+>>>>>>> Stashed changes
 
 
     <!-- TODO: Remove or change this placeholder text -->

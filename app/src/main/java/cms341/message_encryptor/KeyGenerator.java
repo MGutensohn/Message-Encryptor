@@ -68,7 +68,7 @@ public class KeyGenerator extends AppCompatActivity {
                     try {
                         mediaRecorder.prepare();
                         mediaRecorder.start();
-                        Toast.makeText(KeyGenerator.this, "Recording started", Toast.LENGTH_LONG).show();                      recordButton.setText(R.string.recording);
+                        Toast.makeText(KeyGenerator.this, R.string.recording_started, Toast.LENGTH_LONG).show();                      recordButton.setText(R.string.recording);
                         recordButton.setEnabled(false);
                         recordButton.setText(R.string.recording);
                         new CountDownTimer(5000, 1000) {
@@ -78,18 +78,16 @@ public class KeyGenerator extends AppCompatActivity {
 
                             public void onFinish() {
                                 mediaRecorder.stop();
-                                System.err.println("\n\n File: " + AudioSavePathInDevice);
                                 createKey(AudioSavePathInDevice);
                                 startActivity(new Intent(getApplicationContext(), KeyArchive.class));
                             }
-
                         }.start();
 
                     } catch (IllegalStateException e) {
-                        // TODO Auto-generated catch block
+                        System.err.println("Illegal State" + e);
                         e.printStackTrace();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
+                        System.err.println("IO exception" + e);
                         e.printStackTrace();
                     }
                 }
@@ -134,10 +132,10 @@ public class KeyGenerator extends AppCompatActivity {
                                 PackageManager.PERMISSION_GRANTED;
 
                         if (StoragePermission && RecordPermission) {
-                            Toast.makeText(KeyGenerator.this, "Permission Granted",
+                            Toast.makeText(KeyGenerator.this, R.string.permission_granted,
                                     Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(KeyGenerator.this,"Permission Denied",Toast.LENGTH_LONG).show();
+                            Toast.makeText(KeyGenerator.this, R.string.permission_denied,Toast.LENGTH_LONG).show();
                         }
                     }
                     break;
@@ -174,7 +172,6 @@ public class KeyGenerator extends AppCompatActivity {
                 EditText title = (EditText) findViewById(R.id.key_generator);
 
                 dbm.insert(prefs.getString("pass", "password"), title.getText().toString(), key);
-                System.err.println("\n\n KEY: " + key);
 
             } catch (FileNotFoundException e) {
                 System.err.println("File could not be found. " + e);
