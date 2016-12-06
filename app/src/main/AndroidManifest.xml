@@ -34,7 +34,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".KeyArchive"></activity>
+        <activity android:name=".KeyArchive" />
         <activity android:name=".NFCManager">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -56,10 +56,15 @@
         <activity android:name=".KeyReciever">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>

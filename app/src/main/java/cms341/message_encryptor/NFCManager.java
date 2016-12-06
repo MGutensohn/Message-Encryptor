@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 
 public class NFCManager extends AppCompatActivity implements NfcAdapter.CreateNdefMessageCallback {
-
     private TextView mToSend;
     private Intent key;
 
