@@ -14,7 +14,7 @@
     <string name="message_sent">Your encrypted message is sent</string>
     <string name="action_email">Email</string>
     <string name="start">Start</string>
-    <string name="stop">Stop Recording</string>
+    <string name="recording">Now recording</string>
     <string name="send">send</string>
     <string name="enter">Enter Title Here</string>
     <string name="add_key">add new key</string>

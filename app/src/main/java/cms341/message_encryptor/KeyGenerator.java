@@ -3,6 +3,7 @@ package cms341.message_encryptor;
 
 import android.content.SharedPreferences;
 import android.media.MediaRecorder;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,6 @@ public class KeyGenerator extends AppCompatActivity {
         Random random;
         String RandomAudioFileName = "ABCDEFGHIJKLMNOP";
         public static final int RequestPermissionCode = 1;
-        private boolean onClick = false;
         private boolean permissionsCheck;
 
 
@@ -46,7 +46,6 @@ public class KeyGenerator extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.key_generator);
             prefs = getSharedPreferences("user",MODE_PRIVATE);
-
 
             recordButton = (Button) findViewById(R.id.record);
             permissionsCheck = checkPermission();
@@ -58,35 +57,40 @@ public class KeyGenerator extends AppCompatActivity {
             recordButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onClick = !onClick;
-                if (onClick) {
                     recordButton.setText(R.string.start);
-                        AudioSavePathInDevice =
-                                Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
-                                        CreateRandomAudioFileName(5) + "AudioRecording.3gp";
+                    AudioSavePathInDevice =
+                            Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
+                                    CreateRandomAudioFileName(5) + "AudioRecording.3gp";
 
-                        MediaRecorderReady();
-                        recordButton.setText(R.string.stop);
+                    MediaRecorderReady();
 
-                        try {
-                            mediaRecorder.prepare();
-                            mediaRecorder.start();
-                        } catch (IllegalStateException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
+                    try {
+                        mediaRecorder.prepare();
+                        mediaRecorder.start();
+                        Toast.makeText(KeyGenerator.this, "Recording started", Toast.LENGTH_LONG).show();                      recordButton.setText(R.string.recording);
+                        recordButton.setEnabled(false);
+                        recordButton.setText(R.string.recording);
+                        new CountDownTimer(5000, 1000) {
+                            public void onTick(long millisUntilFinished) {
 
-                        Toast.makeText(KeyGenerator.this, "Recording started",
-                                Toast.LENGTH_LONG).show();
-                } else {
-                    mediaRecorder.stop();
-                    recordButton.setText("Start Recording");
-                    System.err.println("\n\n File: " + AudioSavePathInDevice);
-                    createKey(AudioSavePathInDevice);
-                }
+                            }
+
+                            public void onFinish() {
+                                mediaRecorder.stop();
+                                System.err.println("\n\n File: " + AudioSavePathInDevice);
+                                createKey(AudioSavePathInDevice);
+                                setContentView(R.layout.activity_main);
+                            }
+
+                        }.start();
+
+                    } catch (IllegalStateException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -97,6 +101,7 @@ public class KeyGenerator extends AppCompatActivity {
             mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
             mediaRecorder.setOutputFile(AudioSavePathInDevice);
+            mediaRecorder.setMaxDuration(5000);
         }
 
         public String CreateRandomAudioFileName(int string) {
