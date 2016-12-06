@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         Intent emailIntent = new Intent( Intent.ACTION_SEND);
         emailIntent.setType( "text/plain");
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "encrypted text");
-        emailIntent.putExtra(Intent.EXTRA_STREAM, response.getText() );
+        emailIntent.putExtra(Intent.EXTRA_TEXT, response.getText() );
 
         startActivity( Intent.createChooser( emailIntent, getString( R.string.message_sent)));
     }
