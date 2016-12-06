@@ -10,11 +10,8 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-/**
- * Created by mshrestha on 7/23/2014.
- */
+
 public class KeyReciever extends Activity {
 
     private EditText mNewKeyTitle;

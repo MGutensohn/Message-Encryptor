@@ -1,29 +1,23 @@
 package cms341.message_encryptor;
 
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.media.MediaRecorder;
-
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;

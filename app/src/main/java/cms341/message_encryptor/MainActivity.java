@@ -38,13 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private Button encrypt, decrypt;
     private String key;
 
-    private Bitmap bitmap;
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-   
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

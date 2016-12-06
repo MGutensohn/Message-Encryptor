@@ -1,17 +1,12 @@
 package cms341.message_encryptor;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
-import android.os.Parcelable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +15,6 @@ public class NFCManager extends AppCompatActivity implements NfcAdapter.CreateNd
 
     private TextView mToSend;
     private Intent key;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +37,6 @@ public class NFCManager extends AppCompatActivity implements NfcAdapter.CreateNd
         mAdapter.setNdefPushMessageCallback(this, this);
     }
 
-    /**
-     * Ndef Record that will be sent over via NFC
-     *
-     * @param nfcEvent
-     * @return
-     */
     @Override
     public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
         String message = key.getStringExtra("key");

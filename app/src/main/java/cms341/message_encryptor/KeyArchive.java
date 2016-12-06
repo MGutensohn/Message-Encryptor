@@ -39,14 +39,6 @@ public class KeyArchive extends AppCompatActivity {
     private SharedPreferences.OnSharedPreferenceChangeListener setListener;
 
 
-
-
-
-//    @Override
-//    public void getPassword(String s) {
-//        this.password = s;
-//    }
-
     @Override
     public void onRestart(){
         super.onRestart();
@@ -58,15 +50,13 @@ public class KeyArchive extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs = this.getSharedPreferences("user", MODE_PRIVATE);
+        password = prefs.getString("pass", "password");
         setContentView(R.layout.activity_key_archive);
         SQLiteDatabase.loadLibs(this);
         login = new LoginFragment();
         login.show(getFragmentManager(),"login");
-        password = prefs.getString("pass", "password");
 
-
-
-
+        prefs.registerOnSharedPreferenceChangeListener(setListener);
         ArrayList<String> test = new ArrayList<>();
         results = (ListView)findViewById(R.id.keys);
         resultsAdapter = new ArrayAdapter<String>(this, R.layout.convo_item, test);
@@ -90,7 +80,6 @@ public class KeyArchive extends AppCompatActivity {
                     return false;
                 }
 
-                // Start the CAB using the ActionMode.Callback defined above
                 mActionMode = KeyArchive.this.startActionMode(mActionModeCallback);
                 view.setSelected(true);
                 position = i;
@@ -109,6 +98,14 @@ public class KeyArchive extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        setListener = new SharedPreferences.OnSharedPreferenceChangeListener(){
+
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                password = prefs.getString("pass", "password");
+            }
+        };
     }
 
 
