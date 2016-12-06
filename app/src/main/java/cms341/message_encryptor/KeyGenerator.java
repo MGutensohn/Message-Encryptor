@@ -1,6 +1,7 @@
 package cms341.message_encryptor;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaRecorder;
 import android.os.CountDownTimer;
@@ -79,7 +80,7 @@ public class KeyGenerator extends AppCompatActivity {
                                 mediaRecorder.stop();
                                 System.err.println("\n\n File: " + AudioSavePathInDevice);
                                 createKey(AudioSavePathInDevice);
-                                setContentView(R.layout.activity_main);
+                                startActivity(new Intent(getApplicationContext(), KeyArchive.class));
                             }
 
                         }.start();
