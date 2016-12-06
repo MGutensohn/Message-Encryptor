@@ -1,6 +1,7 @@
 package cms341.message_encryptor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaRecorder;
 
 import android.os.Environment;
@@ -35,6 +36,7 @@ import android.content.pm.PackageManager;
  */
 
 public class KeyGenerator extends AppCompatActivity {
+    private SharedPreferences prefs;
         Button recordButton;
         String AudioSavePathInDevice = null;
         MediaRecorder mediaRecorder;
@@ -49,6 +51,7 @@ public class KeyGenerator extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.key_generator);
+            prefs = getSharedPreferences("user",MODE_PRIVATE);
 
 
             recordButton = (Button) findViewById(R.id.record);
@@ -156,7 +159,6 @@ public class KeyGenerator extends AppCompatActivity {
             byte[] bytes = new byte[size];
             try {
                 BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-                Intent intent = getIntent();
                 DBManager dbm = new DBManager(this);
 
                 buf.read(bytes, 0, bytes.length);
@@ -171,7 +173,7 @@ public class KeyGenerator extends AppCompatActivity {
 
                 EditText title = (EditText) findViewById(R.id.key_generator);
 
-                dbm.insert(intent.getStringExtra("password"), title.getText().toString(), key);
+                dbm.insert(prefs.getString("pass", "password"), title.getText().toString(), key);
                 System.err.println("\n\n KEY: " + key);
 
             } catch (FileNotFoundException e) {

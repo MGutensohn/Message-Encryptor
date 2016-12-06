@@ -2,6 +2,7 @@ package cms341.message_encryptor;
 
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,14 +15,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.R.attr.key;
 
-public class KeyArchive extends AppCompatActivity implements LoginFragment.getPasswordListener {
+
+public class KeyArchive extends AppCompatActivity {
     private DBManager dbm;
     ListView results;
     ArrayAdapter resultsAdapter;
@@ -31,11 +35,17 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
     Intent toMessage, toNFC;
     int position;
     DialogFragment login;
+    private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener setListener;
 
-    @Override
-    public void getPassword(String s) {
-        this.password = s;
-    }
+
+
+
+
+//    @Override
+//    public void getPassword(String s) {
+//        this.password = s;
+//    }
 
     @Override
     public void onRestart(){
@@ -47,10 +57,13 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefs = this.getSharedPreferences("user", MODE_PRIVATE);
         setContentView(R.layout.activity_key_archive);
         SQLiteDatabase.loadLibs(this);
         login = new LoginFragment();
         login.show(getFragmentManager(),"login");
+        password = prefs.getString("pass", "password");
+
 
 
 
@@ -93,7 +106,6 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
             public void onClick(View view) {
                 Intent intent = new Intent( getApplicationContext( ),
                         KeyGenerator.class);
-                intent.putExtra("password",password);
                 startActivity(intent);
             }
         });
@@ -101,34 +113,35 @@ public class KeyArchive extends AppCompatActivity implements LoginFragment.getPa
 
 
     public void getStoredKeys(){
-//            dbm.insert(password, "TestKey 0", "qwertyuiopasdfghjklzxcvbnm123456");
-//            dbm.insert(password, "TestKey 1", "qwertyuiopasdfghjklzxcvbnm123456");
-//            dbm.insert(password, "TestKey 2", "qwertyuiopasdfghjklzxcvbnm123456");
-            int id = 0;
-            toMessage = new Intent(this, MainActivity.class);
-            toNFC = new Intent(this, NFCManager.class);
+            if(!password.equals("password")) {
+                int id = 0;
+                toMessage = new Intent(this, MainActivity.class);
+                toNFC = new Intent(this, NFCManager.class);
 
-            ArrayList<String> convos = dbm.selectAll(password);
-            keys = new HashMap<Integer, String>();
+                ArrayList<String> convos = dbm.selectAll(password);
+                keys = new HashMap<Integer, String>();
 
 
-            int index = 0;
-            if (!resultsAdapter.isEmpty()) resultsAdapter.clear();
+                int index = 0;
+                if (!resultsAdapter.isEmpty()) resultsAdapter.clear();
 
-            while (index < convos.size()) {
-                index++;
-                resultsAdapter.add(convos.get(index));
-                Log.i("added item:", convos.get(index));
-                index++;
-                keys.put(id, convos.get(index));
-                index++;
-                id++;
+                while (index < convos.size()) {
+                    index++;
+                    resultsAdapter.add(convos.get(index));
+                    Log.i("added item:", convos.get(index));
+                    index++;
+                    keys.put(id, convos.get(index));
+                    index++;
+                    id++;
 
+                }
+            }else{
+                Toast.makeText(this, "Wrong password", Toast.LENGTH_LONG).show();
             }
     }
 
     public void shareKey(){
-        toNFC.putExtra("password",password);
+        System.out.print("\n\n " + results.getItemAtPosition(position).toString());
         toNFC.putExtra("conversation", results.getItemAtPosition(position).toString());
         toNFC.putExtra("key",keys.get(position));
         startActivity(toNFC);
