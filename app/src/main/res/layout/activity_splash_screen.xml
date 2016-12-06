@@ -30,4 +30,9 @@
         android:textColor="#c0c0c0"
         android:gravity="center"/>
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/picture" />
+
 </FrameLayout>
