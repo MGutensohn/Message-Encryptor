@@ -11,6 +11,11 @@
     android:background="@color/common_google_signin_btn_text_light_focused">
     tools:context="cms341.message_encryptor.splashScreen">
 
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/picture" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,9 +35,5 @@
         android:textColor="#c0c0c0"
         android:gravity="center"/>
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/picture" />
 
 </FrameLayout>
