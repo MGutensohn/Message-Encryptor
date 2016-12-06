@@ -4,8 +4,6 @@ package cms341.message_encryptor;
  * Created by michael on 11/28/16.
  */
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.util.Base64;
 
 import javax.crypto.*;

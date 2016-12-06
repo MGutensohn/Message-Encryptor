@@ -1,77 +1,75 @@
 package cms341.message_encryptor;
 
-import android.app.Dialog;
-import android.content.Context;
+import android.app.DialogFragment;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ActionMode;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static java.sql.Types.NULL;
+import static android.R.attr.key;
+
 
 public class KeyArchive extends AppCompatActivity {
     private DBManager dbm;
     ListView results;
     ArrayAdapter resultsAdapter;
     private ActionMode mActionMode;
-    File dbFile;
-    Dialog PasswordDialog;
-    TextView passwordPrompt;
-    EditText passwordet;
-    Bundle bundle;
+    private String password = null;
     HashMap<Integer, String> keys;
-    Intent intent;
+    Intent toMessage, toNFC;
     int position;
+    DialogFragment login;
+    private SharedPreferences prefs;
+    private SharedPreferences.OnSharedPreferenceChangeListener setListener;
+
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        getStoredKeys();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        prefs = this.getSharedPreferences("user", MODE_PRIVATE);
+        password = prefs.getString("pass", "password");
         setContentView(R.layout.activity_key_archive);
         SQLiteDatabase.loadLibs(this);
+        login = new LoginFragment();
+        login.show(getFragmentManager(),"login");
 
+        prefs.registerOnSharedPreferenceChangeListener(setListener);
         ArrayList<String> test = new ArrayList<>();
         results = (ListView)findViewById(R.id.keys);
         resultsAdapter = new ArrayAdapter<String>(this, R.layout.convo_item, test);
         dbm = new DBManager(this);
-        dbm.insert("testkey", "TestKey 0","qwertyuiopasdfghjklzxcvbnm123456");
-        dbm.insert("testkey", "TestKey 1","qwertyuiopasdfghjklzxcvbnm123456");
-        dbm.insert("testkey", "TestKey 2","qwertyuiopasdfghjklzxcvbnm123456");
-        getStoredKeys();
+
         results.setAdapter(resultsAdapter);
 
 
         results.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                intent.putExtra("key", keys.get(position));
-                startActivity(intent);
+                toMessage.putExtra("key", keys.get(position));
+                startActivity(toMessage);
             }
         });
 
@@ -82,7 +80,6 @@ public class KeyArchive extends AppCompatActivity {
                     return false;
                 }
 
-                // Start the CAB using the ActionMode.Callback defined above
                 mActionMode = KeyArchive.this.startActionMode(mActionModeCallback);
                 view.setSelected(true);
                 position = i;
@@ -96,39 +93,59 @@ public class KeyArchive extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity( new Intent( getApplicationContext( ),
-                        KeyGenerator.class));
+                Intent intent = new Intent( getApplicationContext( ),
+                        KeyGenerator.class);
+                startActivity(intent);
             }
         });
-    }
 
+        setListener = new SharedPreferences.OnSharedPreferenceChangeListener(){
+
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                password = prefs.getString("pass", "password");
+            }
+        };
+    }
 
 
     public void getStoredKeys(){
-        int id = 0;
-        intent = new Intent(this, MainActivity.class);
+            if(!password.equals("password")) {
+                int id = 0;
+                toMessage = new Intent(this, MainActivity.class);
+                toNFC = new Intent(this, NFCManager.class);
 
-        ArrayList<String> convos = dbm.selectAll("testkey");
-        keys = new HashMap<Integer, String>();
+                ArrayList<String> convos = dbm.selectAll(password);
+                keys = new HashMap<Integer, String>();
 
 
-        int index = 0;
-        if(!resultsAdapter.isEmpty()) resultsAdapter.clear();
+                int index = 0;
+                if (!resultsAdapter.isEmpty()) resultsAdapter.clear();
 
-        while(index < convos.size()){
-            index++;
-            resultsAdapter.add(convos.get(index));
-            Log.i("added item:", convos.get(index));
-            index++;
-             keys.put(id, convos.get(index));
-            index++;
-            id++;
+                while (index < convos.size()) {
+                    index++;
+                    resultsAdapter.add(convos.get(index));
+                    Log.i("added item:", convos.get(index));
+                    index++;
+                    keys.put(id, convos.get(index));
+                    index++;
+                    id++;
 
-        }
+                }
+            }else{
+                Toast.makeText(this, "Wrong password", Toast.LENGTH_LONG).show();
+            }
+    }
+
+    public void shareKey(){
+        System.out.print("\n\n " + results.getItemAtPosition(position).toString());
+        toNFC.putExtra("conversation", results.getItemAtPosition(position).toString());
+        toNFC.putExtra("key",keys.get(position));
+        startActivity(toNFC);
     }
 
     public void deleteStoredKey(){
-        dbm.delete("testkey",results.getItemAtPosition(position).toString());
+        dbm.delete(password,results.getItemAtPosition(position).toString());
         getStoredKeys();
     }
 
@@ -156,7 +173,7 @@ public class KeyArchive extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.menu_share:
-                    //shareCurrentItem();
+                    shareKey();
                     mode.finish(); // Action picked, so close the CAB
                     return true;
                 case R.id.menu_delete:
@@ -173,7 +190,9 @@ public class KeyArchive extends AppCompatActivity {
         public void onDestroyActionMode(ActionMode mode) {
             mActionMode = null;
         }
+
     };
+
 
 }
 

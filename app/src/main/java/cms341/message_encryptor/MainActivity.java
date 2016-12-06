@@ -1,6 +1,7 @@
 package cms341.message_encryptor;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import static android.R.attr.id;
+
 public class MainActivity extends AppCompatActivity {
     Cryptor cryptor;
     EditText message;
@@ -35,11 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private Button encrypt, decrypt;
     private String key;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-   
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,11 +116,17 @@ public class MainActivity extends AppCompatActivity {
         reset.setVisibility(View.VISIBLE);
         vView.setVisibility(View.VISIBLE);
 
-        vView.start();                              // starts showing the encoding animation
-        startAnimation(v);
 
-        String decryptedText = cryptor.decryptText(message.getText().toString(), key);
-        response.setText(decryptedText);
+        try {
+            String decryptedText = cryptor.decryptText(message.getText().toString(), key);
+            vView.start();                              // starts showing the encoding animation
+            startAnimation(v);
+            response.setText(decryptedText);
+        }
+        catch (Exception e){
+            Toast.makeText(this, R.string.no_encrypted, Toast.LENGTH_LONG).show();
+            reset(v);
+        }
     }
 
     /**
@@ -142,9 +146,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected( MenuItem item) {
         switch ( item.getItemId( )) {
+
             case R.id.menu_key_generator:
                 loadKeyGenerator(null);
                 return true;
+
+            case R.id.action_email:
+                emailMessage( );
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -238,5 +248,23 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+    public void emailMessage( ) {
+
+
+        if (response.getText() != null) {
+            response = (EditText) findViewById(R.id.text);
+
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("text/plain");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "encrypted text");
+            emailIntent.putExtra(Intent.EXTRA_TEXT, response.getText());
+
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.message_sent)));
+        }
+
+        else {
+            Toast.makeText(this, "Nothing to send", Toast.LENGTH_LONG).show();
+        }
     }
 }

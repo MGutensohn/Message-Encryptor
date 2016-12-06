@@ -48,11 +48,11 @@ public class DBManager extends SQLiteOpenHelper {
 
     }
 
+
     public long insert(String pass, String convo, String key ) {
         long newId = -1;
         try {
             SQLiteDatabase db = this.getWritableDatabase(pass);
-
             ContentValues vals = new ContentValues();
             vals.put(CONVERSATION, convo );
             vals.put( KEY, key);
@@ -75,7 +75,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     public ArrayList<String> selectAll(String pass) {
 
-        ArrayList<String> noteList = new ArrayList<String>( );
+        ArrayList<String> conversations = new ArrayList<String>( );
         try {
             SQLiteDatabase db = this.getReadableDatabase(pass);
             if(db == null){
@@ -91,7 +91,7 @@ public class DBManager extends SQLiteOpenHelper {
 
                 for ( int i = 0; i < cursor.getColumnCount(); i++) {
                     record = cursor.getString(i);
-                    noteList.add(record);
+                    conversations.add(record);
                 }
                 cursor.moveToNext();
             }
@@ -101,71 +101,9 @@ public class DBManager extends SQLiteOpenHelper {
         catch ( SQLException se ) {
             Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
         }
-        return noteList;
+        return conversations;
     }
 
-    public ArrayList<String> selectByColumn(String pass, String colName, String colValue ) {
-
-        ArrayList<String> noteList = new ArrayList<String>( );
-        try {
-            SQLiteDatabase db = this.getReadableDatabase(pass);
-
-            Cursor cursor = db.query( STOREDKEYS, null, colName + " LIKE ?",
-                    new String[] {"%" + colValue + "%"}, null, null, colName );
-
-            cursor.moveToFirst();
-            while ( !cursor.isAfterLast()) {
-                String record = "";
-
-                for ( int i = 0; i < cursor.getColumnCount(); i++) {
-                    record = cursor.getString(i);
-                    noteList.add(record);
-                }
-                cursor.moveToNext();
-            }
-            cursor.close();
-        }
-        catch ( SQLException se ) {
-            Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
-        }
-
-        return noteList;
-    }
-
-    public ArrayAdapter<String> fillAutoCompleteTextFields(String pass, Context context, String column) {
-        ArrayAdapter<String> adapter = null;
-
-        try {
-            SQLiteDatabase db = this.getReadableDatabase(pass);
-
-            // select distinct values in column
-            Cursor cursor = db.query(true, STOREDKEYS, new String[]{column},
-                    null, null, null, null, column, null);
-
-            int numRecs = cursor.getCount();
-
-            if (numRecs > 0) {
-                cursor.moveToFirst();
-
-                String[] autoTextOptions = new String[numRecs];
-                for (int i = 0; i < numRecs; i++) {
-                    autoTextOptions[i] = cursor.getString(cursor.getColumnIndex(column));
-                    cursor.moveToNext();
-                }
-                cursor.close();
-
-                adapter = new ArrayAdapter<String>(context,
-                        android.R.layout.simple_dropdown_item_1line,
-                        autoTextOptions);
-                db.close();
-            }
-        }
-
-        catch ( SQLException se ) {
-            Toast.makeText( context, se.getMessage( ), Toast.LENGTH_LONG).show();
-        }
-        return adapter;
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
